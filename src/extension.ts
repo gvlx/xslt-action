@@ -2,6 +2,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as xslt from 'xslt-processor';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -18,9 +20,30 @@ export function activate(context: vscode.ExtensionContext) {
         // The code you place here will be executed every time your command is executed
 
         // Display a message box to the user
-        
 
-        vscode.window.showInformationMessage('Hello World!');
+        vscode.window.showOpenDialog({
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+            filters: { 'Xml stylesheet files': ['xsl'] }
+        }).then(val => {
+            if (vscode.window.activeTextEditor) {
+                let activeEditorText = vscode.window.activeTextEditor.document.getText();
+
+                if (val) {
+                    let xsltFileContent = fs.readFileSync(val[0].fsPath).toString("utf8");
+                    let xmlNode = xslt.xmlParse(activeEditorText);
+                    let xsltNode = xslt.xmlParse(xsltFileContent);
+                    let result = xslt.xsltProcess(xmlNode, xsltNode);
+
+                    vscode.workspace.openTextDocument({
+                        content: result
+                    }).then(doc => vscode.window.showTextDocument(doc));
+                }
+            }
+        }
+        );
+
     });
 
     context.subscriptions.push(disposable);
