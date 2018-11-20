@@ -2,7 +2,7 @@
     "name": "xslt-action",
     "displayName": "xslt action",
     "description": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "marmac",
     "engines": {
         "vscode": "^1.26.0"
@@ -37,6 +37,6 @@
         "vscode": "^1.1.21"
     },
     "dependencies": {
-        "xslt-processor": "^0.10.0"
+        "xslt-processor": "^0.11.0"
     }
 }

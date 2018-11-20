@@ -32,13 +32,19 @@ export function activate(context: vscode.ExtensionContext) {
 
                 if (val) {
                     let xsltFileContent = fs.readFileSync(val[0].fsPath).toString("utf8");
-                    let xmlNode = xslt.xmlParse(activeEditorText);
-                    let xsltNode = xslt.xmlParse(xsltFileContent);
-                    let result = xslt.xsltProcess(xmlNode, xsltNode);
 
-                    vscode.workspace.openTextDocument({
-                        content: result
-                    }).then(doc => vscode.window.showTextDocument(doc));
+                    try {
+                        let xmlNode = xslt.xmlParse(activeEditorText);
+                        let xsltNode = xslt.xmlParse(xsltFileContent);
+                        
+                        let result = xslt.xsltProcess(xmlNode, xsltNode);
+
+                        vscode.workspace.openTextDocument({
+                            content: result
+                        }).then(doc => vscode.window.showTextDocument(doc));
+                    } catch (e) {
+                        vscode.window.showErrorMessage(e);
+                    }
                 }
             }
         }
